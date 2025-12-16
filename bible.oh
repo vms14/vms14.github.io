@@ -1,0 +1,135 @@
+--- I thank God for allowing me to program
+
+
+(main
+ (h1 :h1 writer to-h1 text-content)
+ (p writer to-p text-content)
+ (button #left-button @click (previous-verse:))
+ (button #right-button @click (next-verse:))
+ (button #bottom-button @click (random-verse:))
+ (button #top-button @click (color-picker:))) dom to-body
+
+
+((font-face fantaesque /fan.ttf)
+ (body
+  box-sizing border-box
+  background black
+  height 100vh
+  color cyan
+  font-family fantaesque
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+  padding (7vh 14vw)
+  filter `brightness(1.3)`)
+ (p
+  font-size 1.3em)
+ (button
+  opacity 0)
+ (.colors
+  position fixed
+  top 0
+  left 0
+  z-index 1
+  width 100vw
+  background black
+  display grid
+  inset 0
+  overflow scroll
+  box-sizing border-box
+  padding 3%
+  grid-template-columns `repeat(auto-fit, minmax(60px, 1fr))`
+  gap 24px)
+
+ (.color
+  opacity 100
+  border 0
+  max-width 40px
+  min-width 40px
+  max-height 40px
+  min-height 40px
+  outline 0
+  border-radius 3px)
+ (.color:hover
+  filter `brightness(1.75)`)
+ (#left-button
+  position fixed
+  width 7vw
+  height 100vh
+  top 0
+  left 0)
+ (#right-button
+  position fixed
+  width 7vh
+  height 100vh
+  top 0
+  right 0)
+ (#top-button
+  position fixed
+  width 100vw
+  height 24vh
+  left 0
+  top 0)
+ (#bottom-button
+  position fixed
+  width 100vw
+  height 7vh
+  left 0
+  bottom 0)) style
+
+(aliceblue antiquewhite aqua aquamarine azure beige bisque blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgreen darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkturquoise darkviolet deeppink deepskyblue dimgray dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightpink lightsalmon lightseagreen lightskyblue lightslategray lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen)
+bind color-list
+
+declare (bible verses)
+
+: show-verse
+  dup bind key
+  bible key get-property
+  ([ # ]) remove-characters to-p:
+  to-h1:
+;
+
+: next-verse
+  verses next-element
+  show-verse
+;
+: previous-verse
+  verses previous-element
+  show-verse
+;
+: random-verse
+  verses random-element
+  show-verse
+;
+
+defun fill-colors
+  bind section
+  color-list
+  { :color "box-shadow: -3px -3px 3px 1px black inset, 1px 1px 13px 1px black inset, 1px 1px 6px 1px " color: .. ", 1px 1px 10px 1px gray; background:" color: .. .. (button .color -style , @click (color body.style.color! section -remove)) @ dom section append } iterate
+end
+
+: color-picker
+  (section .colors) dom dup body append
+  fill-colors
+;
+
+body 'keydown handler
+ event.key case
+  (` ` r) random-verse
+  (w a ArrowUp ArrowLeft) previous-verse
+  (s d ArrowDown ArrowRight) next-verse
+ end
+end
+
+"Loading the bible..." to-p:
+
+wait
+
+'kjv.json fetch -json set bible
+
+bible keys iterator set verses
+
+
+
+random-verse
