@@ -2,8 +2,8 @@
 
 
 (main
- (h1 :h1 writer to-h1 text-content)
- (p writer to-p text-content)
+ (h1 writer h1 text-content)
+ (p writer p text-content)
  (button #left-button @click (previous-verse:))
  (button #right-button @click (next-verse:))
  (button #bottom-button @click (random-verse:))
@@ -86,8 +86,8 @@ declare (bible verses)
 : show-verse
   dup bind key
   bible key get-property
-  ([ # ]) remove-characters to-p:
-  to-h1:
+  ([ # ]) remove-characters p:
+  h1:
 ;
 
 : next-verse
@@ -122,7 +122,7 @@ body 'keydown handler
  end
 end
 
-"Loading the bible..." to-p:
+"Loading the bible..." p:
 
 wait
 
