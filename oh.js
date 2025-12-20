@@ -1076,7 +1076,7 @@ function interpolate_list (list)
 
 // wds
 
-w['('] = () => { const list = build_list(); put(() => put([...list])) }
+w['('] = () => { const list = build_list(); put(() => put(list.slice())) }
 
 w[':'] = () =>
 {
@@ -1087,12 +1087,12 @@ w[':'] = () =>
 w['wait'] = () => { make_fun = make_async_sub }
 w['no-wait'] = () => { make_fun = make_sub }
 
-w.s = () => { console.log([...stack]) }
+w.s = () => { console.log(stack.slice()) }
 
 w.block = () =>
 {
-  const e = env
-  const code = block()
+  const e = make_env(env)
+  const code = env_block(e)
   put(() => { const old = env; env = make_env(e); code(); env = old })
 }
 
@@ -1200,6 +1200,9 @@ w.else = () => { error('else found outside if or in if without then') }
 w.end = () => { error('end found outside a block or in if without then') }
 w.nop = () => {}
 w.find = () => put(find(get()))
+
+w.pop = () => put(get().pop())
+w.shift = () => put(get().shift())
 
 w.promise = () =>
 {
