@@ -720,6 +720,7 @@ function browser ()
   {
     for (let oh of document.getElementsByTagName('oh'))
     {
+      console.log(oh)
       const src = oh.getAttribute('src')
       if (src)
       {
