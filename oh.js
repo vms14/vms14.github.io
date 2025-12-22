@@ -718,7 +718,7 @@ function browser ()
   }
   async function load_scripts ()
   {
-    for (let oh of document.getElementsByTagName('oh'))
+    for (let oh of [...document.getElementsByTagName('oh')])
     {
       console.log(oh)
       const src = oh.getAttribute('src')
